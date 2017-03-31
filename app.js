@@ -195,7 +195,7 @@ iotfClient.on("connect", function () {
         //if (dataPacket.d.distance === 100) {
           //  dataPacket.d.distance = 0;
         //}
-        dataPacket.d.distance = dataPacket.d.distance - distanceDecrement;
+        //dataPacket.d.distance = dataPacket.d.distance - distanceDecrement;
 
     }, varIntervalBetweenData*1000);
 
