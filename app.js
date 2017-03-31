@@ -30,6 +30,8 @@ var varIntervalBetweenData = 2;
 // Quality of Serive for the publish event. Supported values : 0, 1, 2
 var QosLevel = 0;
 
+var flag = false;
+
 // read the id of the IoT foundation org out of a local .env file
 // format of .env file:
 // iotf_org=<id of IoT Foundation organization>
@@ -119,8 +121,8 @@ iotfClient.on("connect", function () {
     // inital data packet to be emitted as a JSON object
     var dataPacket = {
         "d" : {
-            "nivelTormenta" : 75,
-            "distance" : 200,
+            "nivelLiquido" : 75,
+            //"distance" : 200,
             //"humidity" : 10,
             //"luminosity" : 5
         }
@@ -141,34 +143,44 @@ iotfClient.on("connect", function () {
         console.log(JSON.stringify(dataPacket));
 
         //
-        // increment nivelTormenta up to 100 then back down to 0
+        // increment nivelLiquido up to 100 then back down to 0
         //
-        //if (dataPacket.d.nivelTormenta === 0) {
+        //if (dataPacket.d.nivelLiquido === 0) {
         //   var countingUp = true;
-        //} else if (dataPacket.d.nivelTormenta === 100) {
+        //} else if (dataPacket.d.nivelLiquido === 100) {
         //   var countingUp = false;
         //}
         //if (countingUp === true) {
-        //    if (dataPacket.d.nivelTormenta === 100) {
+        //    if (dataPacket.d.nivelLiquido === 100) {
         //       var countingUp = false;
         //    } else1{
         //       var countingUp = true;
         //    }
-        //    var nivelTormentaIncrement = 20;
+        //    var nivelLiquidoIncrement = 20;
         //} else {
-        //    if (dataPacket.d.nivelTormenta === 0) {
+        //    if (dataPacket.d.nivelLiquido === 0) {
         //       var countingUp = true
         //    } else {
         //       var countingUp = false;
         //    }
-            var nivelTormentaIncrement = 0;
-            var distanceDecrement = 20;
+            var nivelLiquidoIncrement = 0.25;
+            //var distanceDecrement = 20;
           //  var luminosityIncrement = 1;
         //}
-        //if (dataPacket.d.nivelTormenta === 100) {
-          //  dataPacket.d.nivelTormenta = 0;
+        //if (dataPacket.d.nivelLiquido === 100) {
+          //  dataPacket.d.nivelLiquido = 0;
         //}
-        dataPacket.d.nivelTormenta = dataPacket.d.nivelTormenta + nivelTormentaIncrement;
+        if(dataPacket.d.nivelLiquido > 80){
+        	dataPacket.d.nivelLiquido = dataPacket.d.nivelLiquido - nivelLiquidoIncrement;
+        	flag = true;
+        }else if(dataPacket.d.nivelLiquido < 70){
+        	dataPacket.d.nivelLiquido = dataPacket.d.nivelLiquido + nivelLiquidoIncrement;
+        	flag = false;
+        }else if(flag){
+			dataPacket.d.nivelLiquido = dataPacket.d.nivelLiquido - nivelLiquidoIncrement;
+        }else if(!flag){
+        	dataPacket.d.nivelLiquido = dataPacket.d.nivelLiquido + nivelLiquidoIncrement;
+        }
 
         //if (dataPacket.d.humidity === 100) {
           //  dataPacket.d.humidity = 0;
